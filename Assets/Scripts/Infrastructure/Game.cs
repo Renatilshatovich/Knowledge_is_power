@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class Game : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static IInputService InputService;
+
+    public Game()
     {
-        
+        RegisterInputService();
     }
 
-    // Update is called once per frame
-    void Update()
+    private static void RegisterInputService()
     {
-        
+        if (Application.isEditor)
+            InputService = new StandaloneInputService();
+        else
+            InputService = new MobileInputService();
     }
 }
