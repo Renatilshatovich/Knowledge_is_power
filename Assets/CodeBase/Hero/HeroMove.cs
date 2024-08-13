@@ -1,4 +1,5 @@
 using System;
+using CodeBase.CameraLogic;
 using CodeBase.Infrastructure;
 using CodeBase.Services;
 using UnityEngine;
@@ -21,7 +22,11 @@ namespace CodeBase.Hero
         private void Start()
         {
             _camera = Camera.main;
+
+            CameraFollow();
         }
+
+        private void CameraFollow() => _camera.GetComponent<CameraFollow>().Follow(gameObject);
 
         private void Update()
         {
