@@ -1,4 +1,3 @@
-using System;
 using CodeBase.CameraLogic;
 using CodeBase.Infrastructure;
 using CodeBase.Services;
