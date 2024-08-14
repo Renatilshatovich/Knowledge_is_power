@@ -1,3 +1,4 @@
+using CodeBase.Services.Input;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure
@@ -5,18 +6,11 @@ namespace CodeBase.Infrastructure
     public class Game : MonoBehaviour
     {
         public static IInputService InputService;
+        public GameStateMachine _stateMaachine;
 
         public Game()
         {
-            RegisterInputService();
-        }
-
-        private static void RegisterInputService()
-        {
-            if (Application.isEditor)
-                InputService = new StandaloneInputService();
-            else
-                InputService = new MobileInputService();
+            _stateMaachine = new GameStateMachine();
         }
     }
 }

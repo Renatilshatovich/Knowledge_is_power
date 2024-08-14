@@ -1,18 +1,21 @@
 using UnityEngine;
 
-public class StandaloneInputService : InputService
+namespace CodeBase.Services.Input
 {
-    public override Vector2 Axis
+    public class StandaloneInputService : InputService
     {
-        get
+        public override Vector2 Axis
         {
-            Vector2 axis = SimpleInputAxis();
+            get
+            {
+                Vector2 axis = SimpleInputAxis();
             
-            if (axis == Vector2.zero)
-                axis = UnityAxis();
+                if (axis == Vector2.zero)
+                    axis = UnityAxis();
                 
-            return axis;
+                return axis;
+            }
         }
+        private Vector2 UnityAxis() => new(UnityEngine.Input.GetAxis(Horizontal), UnityEngine.Input.GetAxis(Vertical));
     }
-    private Vector2 UnityAxis() => new(Input.GetAxis(Horizontal), Input.GetAxis(Vertical));
 }
