@@ -22,10 +22,7 @@ namespace CodeBase.Infrastructure
             _sceneLoader.Load(Initial, EnterLoadLevel);
         }
 
-        private void EnterLoadLevel()
-        {
-            
-        }
+        private void EnterLoadLevel() => _stateMachine.Enter<LoadLevelState>();
 
         private void RegisterServices()
         {
