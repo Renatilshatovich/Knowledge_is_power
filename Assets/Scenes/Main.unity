@@ -11477,7 +11477,6 @@ MonoBehaviour:
   RotationAngleX: 50
   Distance: 9
   OffsetY: 0.5
-  _following: {fileID: 3302125765623191747, guid: 181862a89f60d7a459002f9870860ad4, type: 3}
 --- !u!1 &2116339133 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 167442, guid: 9128fac7ecb9c4b4085275bbf85879ee, type: 3}
