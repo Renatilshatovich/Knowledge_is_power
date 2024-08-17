@@ -1,40 +1,33 @@
-using CodeBase.CameraLogic;
 using CodeBase.Infrastructure;
-using CodeBase.Services;
 using CodeBase.Services.Input;
 using UnityEngine;
 
 namespace CodeBase.Hero
 {
+    [RequireComponent(typeof(CharacterController))]
     public class HeroMove : MonoBehaviour
     {
-        public CharacterController CharacterController;
-        public float MovementSpeed;
+        public float MovementSpeed = 10f;
         
-        private IInputService _inputService;
-        private Camera _camera;
+        private CharacterController _characterController;
+        private IInputService _input;
+        private HeroAnimator _heroAnimator;
 
         private void Awake()
         {
-            _inputService = Game.InputService;
+            _input = Game.InputService;
+
+            _characterController = GetComponent<CharacterController>();
+            _heroAnimator = GetComponent<HeroAnimator>();
         }
-
-        private void Start()
-        {
-            _camera = Camera.main;
-
-            CameraFollow();
-        }
-
-        private void CameraFollow() => _camera.GetComponent<CameraFollow>().Follow(gameObject);
 
         private void Update()
         {
             Vector3 movementVector = Vector3.zero;
 
-            if (_inputService.Axis.sqrMagnitude > Constants.Epsilon)
+            if (_input.Axis.sqrMagnitude > 0.001f)
             {
-                movementVector = _camera.transform.TransformDirection(_inputService.Axis);
+                movementVector = Camera.main.transform.TransformDirection(_input.Axis);
                 movementVector.y = 0;
                 movementVector.Normalize();
 
@@ -43,7 +36,7 @@ namespace CodeBase.Hero
 
             movementVector += Physics.gravity;
             
-            CharacterController.Move(MovementSpeed * movementVector * Time.deltaTime);
+            _characterController.Move(MovementSpeed * movementVector * Time.deltaTime);
         }
     }
 }

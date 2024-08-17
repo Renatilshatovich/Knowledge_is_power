@@ -4,11 +4,11 @@ namespace CodeBase.CameraLogic
 {
     public class CameraFollow : MonoBehaviour
     {
-        public float RotationAngleX;
-        public float Distance;
-        public float OffsetY;
+        [SerializeField] private float RotationAngleX;
+        [SerializeField] private float Distance;
+        [SerializeField] private float OffsetY;
 
-        [SerializeField] private Transform _following;
+        private Transform _following;
 
         private void LateUpdate()
         {
