@@ -1,32 +1,19 @@
+using CodeBase.Infrastructure.AssetManagement;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure
 {
  public class GameFactory : IGameFactory
  {
-  private const string HeroPath = "Hero/hero";
-  private const string HudPath = "Hud/Hud";
-
-  public GameObject CreateHero(GameObject at)
+  private readonly IAssetProvider _assets;
+  
+  public GameFactory(IAssetProvider assets)
   {
-   return Instantiate(HeroPath, at: at.transform.position);
+   _assets = assets;
   }
 
-  public void CreateHud()
-  {
-   Instantiate(HudPath);
-  }
+  public GameObject CreateHero(GameObject at) => _assets.Instantiate(AssetPath.HeroPath, at: at.transform.position);
 
-  private static GameObject Instantiate(string path)
-  {
-   GameObject prefab = Resources.Load<GameObject>(path);
-   return Object.Instantiate(prefab);
-  }
-
-  private static GameObject Instantiate(string path, Vector3 at)
-  {
-   var prefab = Resources.Load<GameObject>(path);
-   return Object.Instantiate(prefab, at, Quaternion.identity);
-  }
+  public void CreateHud() => _assets.Instantiate(AssetPath.HudPath);
  }
 }
