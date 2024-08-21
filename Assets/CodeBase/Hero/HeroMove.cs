@@ -44,7 +44,7 @@ namespace CodeBase.Hero
 
         public void UpdateProgress(PlayerProgress progress)
         {
-            
+            progress.WorldData.Position = transform.position.AsVectorData();
         }
 
         public void LoadProgress(PlayerProgress progress)
