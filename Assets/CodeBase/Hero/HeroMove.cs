@@ -4,6 +4,7 @@ using CodeBase.Infrastructure.Services;
 using CodeBase.Services.Input;
 using CodeBase.Services.PersistentProgress;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace CodeBase.Hero
 {
@@ -42,14 +43,25 @@ namespace CodeBase.Hero
             _characterController.Move(MovementSpeed * movementVector * Time.deltaTime);
         }
 
-        public void UpdateProgress(PlayerProgress progress)
-        {
-            progress.WorldData.Position = transform.position.AsVectorData();
-        }
+        public void UpdateProgress(PlayerProgress progress) => progress.WorldData.PositionOnLevel = new PositionOnLevel(CurrentLevel(), transform.position.AsVectorData());
 
         public void LoadProgress(PlayerProgress progress)
         {
-            
+            if (CurrentLevel() == progress.WorldData.PositionOnLevel.Level)
+            {
+                Vector3Data savedPosition = progress.WorldData.PositionOnLevel.Position;
+                if (savedPosition != null)
+                    Warp(savedPosition);
+            }
         }
+
+        private void Warp(Vector3Data to)
+        {
+            _characterController.enabled = false;
+            transform.position = to.AsUnityVector();
+            _characterController.enabled = true;
+        }
+
+        private static string CurrentLevel() => SceneManager.GetActiveScene().name;
     }
 }
