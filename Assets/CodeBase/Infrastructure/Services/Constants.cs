@@ -1,4 +1,4 @@
-namespace CodeBase.Services
+namespace CodeBase.Infrastructure.Services
 {
     public class Constants
     {
