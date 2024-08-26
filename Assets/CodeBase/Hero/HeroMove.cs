@@ -1,8 +1,8 @@
 using CodeBase.Data;
 using CodeBase.Infrastructure;
 using CodeBase.Infrastructure.Services;
-using CodeBase.Infrastructure.Services.Input;
 using CodeBase.Infrastructure.Services.PersistentProgress;
+using CodeBase.Services.Input;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -58,7 +58,7 @@ namespace CodeBase.Hero
         private void Warp(Vector3Data to)
         {
             _characterController.enabled = false;
-            transform.position = to.AsUnityVector();
+            transform.position = to.AsUnityVector().AddY(_characterController.height);
             _characterController.enabled = true;
         }
 

@@ -4,17 +4,14 @@ namespace CodeBase.Infrastructure.States
     {
         public GameLoopState(GameStateMachine stateMachine)
         {
-            
         }
 
         public void Exit()
         {
-            
         }
 
         public void Enter()
         {
-            
         }
     }
 }

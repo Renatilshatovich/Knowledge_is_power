@@ -1,3 +1,4 @@
+using System;
 using CodeBase.Data;
 using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Infrastructure.Services.SaveLoad;
@@ -8,29 +9,34 @@ namespace CodeBase.Infrastructure.States
     {
         private readonly GameStateMachine _gameStateMachine;
         private readonly IPersistentProgressService _progressService;
-        private readonly ISaveLoadService _saveLoadService;
+        private readonly ISaveLoadService _saveLoadProgress;
 
-        public LoadProgressState(GameStateMachine gameStateMachine, IPersistentProgressService progressService, ISaveLoadService saveLoadService)
+        public LoadProgressState(GameStateMachine gameStateMachine, IPersistentProgressService progressService, ISaveLoadService saveLoadProgress)
         {
             _gameStateMachine = gameStateMachine;
             _progressService = progressService;
-            _saveLoadService = saveLoadService;
+            _saveLoadProgress = saveLoadProgress;
         }
 
         public void Enter()
         {
             LoadProgressOrInitNew();
+      
             _gameStateMachine.Enter<LoadLevelState, string>(_progressService.Progress.WorldData.PositionOnLevel.Level);
         }
 
         public void Exit()
         {
-            
         }
 
-        private void LoadProgressOrInitNew() => 
-            _progressService.Progress = _saveLoadService.LoadProgress() ?? NewProgress();
+        private void LoadProgressOrInitNew()
+        {
+            _progressService.Progress = 
+                _saveLoadProgress.LoadProgress() 
+                ?? NewProgress();
+        }
 
-        private PlayerProgress NewProgress() => new(initialLevel: "Main");
+        private PlayerProgress NewProgress() => 
+            new PlayerProgress(initialLevel: "Main");
     }
 }

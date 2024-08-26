@@ -1,11 +1,11 @@
 using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.States;
 using CodeBase.Logic;
-using UnityEngine;
+using CodeBase.Services.Input;
 
 namespace CodeBase.Infrastructure
 {
-    public class Game : MonoBehaviour
+    public class Game
     {
         public GameStateMachine StateMachine;
 

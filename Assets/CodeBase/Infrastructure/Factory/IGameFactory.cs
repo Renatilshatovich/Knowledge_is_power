@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CodeBase.Infrastructure.Factory
 {
-    public interface IGameFactory : IService
+    public interface IGameFactory:IService
     {
         GameObject CreateHero(GameObject at);
         void CreateHud();
@@ -13,4 +13,4 @@ namespace CodeBase.Infrastructure.Factory
         List<ISavedProgress> ProgressWriters { get; }
         void Cleanup();
     }
-}   
+}

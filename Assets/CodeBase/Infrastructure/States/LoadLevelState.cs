@@ -1,3 +1,4 @@
+using System;
 using CodeBase.CameraLogic;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Infrastructure.Services.PersistentProgress;
@@ -9,30 +10,31 @@ namespace CodeBase.Infrastructure.States
     public class LoadLevelState : IPayloadedState<string>
     {
         private const string InitialPointTag = "InitialPoint";
-        
+
         private readonly GameStateMachine _stateMachine;
         private readonly SceneLoader _sceneLoader;
-        private readonly LoadingCurtain _curtain;
+        private readonly LoadingCurtain _loadingCurtain;
         private readonly IGameFactory _gameFactory;
         private readonly IPersistentProgressService _progressService;
 
-        public LoadLevelState(GameStateMachine stateMachine, SceneLoader sceneLoader, LoadingCurtain curtain, IGameFactory gameFactory, IPersistentProgressService progressService)
+        public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain, IGameFactory gameFactory, IPersistentProgressService progressService)
         {
-            _stateMachine = stateMachine;
+            _stateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
-            _curtain = curtain;
+            _loadingCurtain = loadingCurtain;
             _gameFactory = gameFactory;
             _progressService = progressService;
         }
 
         public void Enter(string sceneName)
         {
-            _curtain.Show();
+            _loadingCurtain.Show();
             _gameFactory.Cleanup();
             _sceneLoader.Load(sceneName, OnLoaded);
         }
 
-        public void Exit() => _curtain.Hide();
+        public void Exit() =>
+            _loadingCurtain.Hide();
 
         private void OnLoaded()
         {
@@ -50,16 +52,13 @@ namespace CodeBase.Infrastructure.States
 
         private void InitGameWorld()
         {
-            GameObject hero = _gameFactory.CreateHero(at: GameObject.FindWithTag(InitialPointTag));
+            GameObject hero = _gameFactory.CreateHero(GameObject.FindWithTag(InitialPointTag));
             _gameFactory.CreateHud();
-            
+
             CameraFollow(hero);
         }
 
-        private void CameraFollow(GameObject hero)
-        {
-            if (Camera.main != null) 
-                Camera.main.GetComponent<CameraFollow>().Follow(hero);
-        }
+        private void CameraFollow(GameObject hero) =>
+            Camera.main.GetComponent<CameraFollow>().Follow(hero);
     }
 }
