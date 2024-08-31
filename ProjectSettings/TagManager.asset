@@ -9,6 +9,7 @@ TagManager:
   - AttackRangeDetector
   - FixTemporaire
   - InitialPoint
+  - LoadingCurtain
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Player
   - 
   - 
   - 
