@@ -399,6 +399,7 @@ GameObject:
   - component: {fileID: -6558536764636263033}
   - component: {fileID: -7357090796174278411}
   - component: {fileID: 6749637723985588129}
+  - component: {fileID: 8197489048668018183}
   m_Layer: 0
   m_Name: FreeLichPBR
   m_TagString: Untagged
@@ -506,6 +507,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Agent: {fileID: -6558536764636263033}
   Animator: {fileID: 1759886331324184333}
+--- !u!114 &8197489048668018183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500939411536426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a7e1642cb254939b2d11897f308e948, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TriggerObserver: {fileID: 4540201955294477736}
+  Follow: {fileID: -7357090796174278411}
 --- !u!1 &1537370055453520
 GameObject:
   m_ObjectHideFlags: 0
@@ -941,6 +956,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7613826645905789476}
   - component: {fileID: 2674040939355288740}
+  - component: {fileID: 4540201955294477736}
   m_Layer: 0
   m_Name: AggroZone
   m_TagString: Untagged
@@ -982,5 +998,17 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 10
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Radius: 4
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4540201955294477736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5657451658654004313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c004b2ad34c2472990362005b010bba3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -1,10 +1,7 @@
-using System;
 using UnityEngine;
 
 namespace CodeBase.Enemy
 {
-        
-    [RequireComponent(typeof(Collider))]
     public class Aggro: MonoBehaviour
     {
         public TriggerObserver TriggerObserver;
