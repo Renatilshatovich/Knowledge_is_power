@@ -400,6 +400,7 @@ GameObject:
   - component: {fileID: -7357090796174278411}
   - component: {fileID: 6749637723985588129}
   - component: {fileID: 8197489048668018183}
+  - component: {fileID: 4211199411187970526}
   m_Layer: 0
   m_Name: FreeLichPBR
   m_TagString: Untagged
@@ -522,6 +523,21 @@ MonoBehaviour:
   TriggerObserver: {fileID: 4540201955294477736}
   Follow: {fileID: -7357090796174278411}
   Cooldown: 3
+--- !u!114 &4211199411187970526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500939411536426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7211fd542779a62cbedc6f3756faf3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 1759886331324184333}
+  AttackCooldown: 3
+  Cleavage: 0.5
 --- !u!1 &1537370055453520
 GameObject:
   m_ObjectHideFlags: 0
