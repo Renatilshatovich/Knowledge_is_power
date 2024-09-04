@@ -18,7 +18,7 @@ namespace CodeBase.Infrastructure.Factory
         
         GameObject CreateHero(GameObject at);
         
-        void CreateHud();
+        GameObject CreateHud();
         
         void Cleanup();
     }

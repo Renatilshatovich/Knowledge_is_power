@@ -1,3 +1,4 @@
+using System;
 using CodeBase.Data;
 using CodeBase.Infrastructure.Services.PersistentProgress;
 using UnityEngine;
@@ -10,11 +11,21 @@ namespace CodeBase.Hero
         public HeroAnimator Animator;
         private State _state;
 
+        public Action HealthChanged;
+
         public float Current
         {
-            get => _state.CurrentHP; 
-            set => _state.CurrentHP = value;
+            get => _state.CurrentHP;
+            set
+            {
+                if (_state.CurrentHP != value)
+                {
+                    _state.CurrentHP = value;
+                    HealthChanged?.Invoke();
+                }
+            }
         }
+
         public float Max 
         {
             get => _state.MaxHP; 
@@ -24,6 +35,7 @@ namespace CodeBase.Hero
         public void LoadProgress(PlayerProgress progress)
         {
             _state = progress.HeroState;
+            HealthChanged?.Invoke();
         }
 
         public void UpdateProgress(PlayerProgress progress)
