@@ -19,6 +19,7 @@ namespace CodeBase.Enemy
         private bool _isAttacking;
         private int _layerMask;
         private Collider[] _hits = new Collider[1];
+        private bool _attackIsActive;
 
         private void Awake()
         {
@@ -50,6 +51,12 @@ namespace CodeBase.Enemy
             _attackCooldown = AttackCooldown;
             _isAttacking = false;
         }
+
+        public void EnableAttack() => 
+            _attackIsActive = true;
+
+        public void DisableAttack() => 
+            _attackIsActive = false;
 
         private bool Hit(out Collider hit)
         {
@@ -85,7 +92,8 @@ namespace CodeBase.Enemy
         }
 
         private bool CanAttack() => 
-            !_isAttacking && CooldownIsUp();
+            _attackIsActive && !_isAttacking && CooldownIsUp();
+
         private void OnHeroCreated() => 
             _heroTransform = _factory.HeroGameObject.transform;
     }
