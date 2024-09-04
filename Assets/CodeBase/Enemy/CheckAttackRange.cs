@@ -3,7 +3,7 @@ using UnityEngine;
 namespace CodeBase.Enemy
 {
     [RequireComponent(typeof(Attack))]
-    public class CheckAttackRange
+    public class CheckAttackRange : MonoBehaviour
     {
         public Attack Attack;
         public TriggerObserver TriggerObserver;
