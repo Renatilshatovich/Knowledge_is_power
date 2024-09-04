@@ -10,6 +10,7 @@ namespace CodeBase.Infrastructure.States
         private readonly GameStateMachine _gameStateMachine;
         private readonly IPersistentProgressService _progressService;
         private readonly ISaveLoadService _saveLoadProgress;
+        private PlayerProgress playerProgress;
 
         public LoadProgressState(GameStateMachine gameStateMachine, IPersistentProgressService progressService, ISaveLoadService saveLoadProgress)
         {
@@ -36,7 +37,14 @@ namespace CodeBase.Infrastructure.States
                 ?? NewProgress();
         }
 
-        private PlayerProgress NewProgress() => 
-            new PlayerProgress(initialLevel: "Main");
+        private PlayerProgress NewProgress()
+        {
+            var progress = new PlayerProgress(initialLevel: "Main");
+
+            progress.HeroState.MaxHP = 50;
+            progress.HeroState.ResetHP();
+            
+            return progress;
+        }
     }
 }
