@@ -538,8 +538,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Animator: {fileID: 1759886331324184333}
-  AttackCooldown: 3
+  AttackCooldown: 1
   Cleavage: 0.5
+  Damage: 10
 --- !u!114 &5812280221439287252
 MonoBehaviour:
   m_ObjectHideFlags: 0
