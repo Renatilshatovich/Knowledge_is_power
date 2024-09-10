@@ -3125,6 +3125,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spawner (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8419303764279804506, guid: 81a777b6b82461c78b45fcf4ecc5db72, type: 3}
+      propertyPath: Slain
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10686,6 +10690,10 @@ PrefabInstance:
     - target: {fileID: 6716093315633107050, guid: 81a777b6b82461c78b45fcf4ecc5db72, type: 3}
       propertyPath: m_Name
       value: Spawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 8419303764279804506, guid: 81a777b6b82461c78b45fcf4ecc5db72, type: 3}
+      propertyPath: Slain
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
