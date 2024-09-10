@@ -8,17 +8,17 @@ namespace CodeBase.Infrastructure.Factory
 {
     public class GameFactory : IGameFactory
     {
-        private readonly IAssetProvider assetProvider;
+        private readonly IAssetProvider _assets;
     
         public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
         public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
-        
-        public GameObject HeroGameObject { get; private set; }
+    
+        public GameObject HeroGameObject { get; set; }
         public event Action HeroCreated;
 
-        public GameFactory(IAssetProvider assetProvider)
+        public GameFactory(IAssetProvider assets)
         {
-            this.assetProvider = assetProvider;
+            _assets = assets;
         }
 
         public GameObject CreateHero(GameObject at)
@@ -28,7 +28,7 @@ namespace CodeBase.Infrastructure.Factory
             return HeroGameObject;
         }
 
-        public GameObject CreateHud() =>
+        public GameObject CreateHud() => 
             InstantiateRegistered(AssetPath.HudPath);
 
         public void Cleanup()
@@ -37,17 +37,25 @@ namespace CodeBase.Infrastructure.Factory
             ProgressWriters.Clear();
         }
 
+        public void Register(ISavedProgressReader progressReader)
+        {
+            if(progressReader is ISavedProgress progressWriter)
+                ProgressWriters.Add(progressWriter);
+      
+            ProgressReaders.Add(progressReader);
+        }
+
         private GameObject InstantiateRegistered(string prefabPath, Vector3 at)
         {
-            GameObject gameObject = assetProvider.Instantiate(path: prefabPath, at: at);
+            GameObject gameObject = _assets.Instantiate(path: prefabPath, at: at);
 
             RegisterProgressWatchers(gameObject);
             return gameObject;
-        } 
-    
+        }
+
         private GameObject InstantiateRegistered(string prefabPath)
         {
-            GameObject gameObject = assetProvider.Instantiate(path: prefabPath);
+            GameObject gameObject = _assets.Instantiate(path: prefabPath);
 
             RegisterProgressWatchers(gameObject);
             return gameObject;
@@ -59,14 +67,6 @@ namespace CodeBase.Infrastructure.Factory
             {
                 Register(progressReader);
             }
-        }
-
-        private void Register(ISavedProgressReader progressReader)
-        {
-            if(progressReader is ISavedProgress progressWriter)
-                ProgressWriters.Add(progressWriter);
-      
-            ProgressReaders.Add(progressReader);
         }
     }
 }
