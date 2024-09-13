@@ -1,35 +1,65 @@
-using System;
 using System.Collections.Generic;
+using CodeBase.Enemy;
 using CodeBase.Infrastructure.AssetManagement;
+using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.Services.PersistentProgress;
+using CodeBase.Logic;
+using CodeBase.StaticData;
+using CodeBase.UI;
 using UnityEngine;
+using UnityEngine.AI;
+using Object = UnityEngine.Object;
 
 namespace CodeBase.Infrastructure.Factory
 {
     public class GameFactory : IGameFactory
     {
         private readonly IAssetProvider _assets;
-    
+        private readonly IStaticDataService _staticData;
+
         public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
         public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
-    
-        public GameObject HeroGameObject { get; set; }
-        public event Action HeroCreated;
 
-        public GameFactory(IAssetProvider assets)
+        private GameObject HeroGameObject { get; set; }
+
+        public GameFactory(IAssetProvider assets, IStaticDataService staticData)
         {
             _assets = assets;
+            _staticData = staticData;
         }
 
         public GameObject CreateHero(GameObject at)
         {
             HeroGameObject = InstantiateRegistered(AssetPath.HeroPath, at.transform.position);
-            HeroCreated?.Invoke();
             return HeroGameObject;
         }
 
         public GameObject CreateHud() => 
             InstantiateRegistered(AssetPath.HudPath);
+
+        public GameObject CreateMonsters(MonsterTypeId typeId, Transform parent)
+        {
+            MonsterStaticData monsterData = _staticData.ForMonster(typeId);
+            GameObject monster = Object.Instantiate(monsterData.Prefab, parent.position, Quaternion.identity, parent);
+
+            IHealth health = monster.GetComponent<IHealth>();
+            health.Current = monsterData.Hp;
+            health.Max = monsterData.Hp;
+            
+            monster.GetComponent<ActorUI>().Construct(health);
+            monster.GetComponent<AgentMoveToHero>().Construct(HeroGameObject.transform);
+            monster.GetComponent<NavMeshAgent>().speed = monsterData.MoveSpeed;
+
+            Attack attack = monster.GetComponent<Attack>();
+            attack.Construct(HeroGameObject.transform);
+            attack.Damage = monsterData.Damage;
+            attack.Cleavage = monsterData.Cleavage;
+            attack.EffectiveDistance = monsterData.EffectiveDistance;
+
+            monster.GetComponent<RotateToHero>()?.Construct(HeroGameObject.transform);
+            
+            return monster;
+        }
 
         public void Cleanup()
         {
