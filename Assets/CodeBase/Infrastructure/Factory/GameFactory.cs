@@ -20,7 +20,7 @@ namespace CodeBase.Infrastructure.Factory
         public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
         public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
 
-        private GameObject HeroGameObject { get; set; }
+        public GameObject HeroGameObject { get; private set; }
 
         public GameFactory(IAssetProvider assets, IStaticDataService staticData)
         {
@@ -28,13 +28,7 @@ namespace CodeBase.Infrastructure.Factory
             _staticData = staticData;
         }
 
-        public GameObject CreateHero(GameObject at)
-        {
-            HeroGameObject = InstantiateRegistered(AssetPath.HeroPath, at.transform.position);
-            return HeroGameObject;
-        }
-
-    public GameObject CreateHud() => 
+        public GameObject CreateHud() => 
       InstantiateRegistered(AssetPath.HudPath);
 
         public GameObject CreateMonster(MonsterTypeId typeId, Transform parent)
@@ -49,6 +43,9 @@ namespace CodeBase.Infrastructure.Factory
             monster.GetComponent<ActorUI>().Construct(health);
             monster.GetComponent<NavMeshAgent>().speed = monsterData.MoveSpeed;
 
+            var lootSpawner = monster.GetComponentInChildren<LootSpawner>();
+            lootSpawner.Construct(this);
+
             Attack attack = monster.GetComponent<Attack>();
             attack.Construct(HeroGameObject.transform);
             attack.Damage = monsterData.Damage;
@@ -60,6 +57,12 @@ namespace CodeBase.Infrastructure.Factory
             
             return monster;
         }
+
+        public GameObject CreateLoot() => 
+            InstantiateRegistered(AssetPath.Loot);
+
+        public GameObject CreateHero(GameObject at) => 
+            HeroGameObject = InstantiateRegistered(AssetPath.HeroPath, at.transform.position);
 
         public void Cleanup()
         {
