@@ -13,7 +13,10 @@ namespace CodeBase.Services.StaticData
     
         [Range(1,30)]
         public float Damage = 10;
-    
+
+        public int MinLoot;
+        public int MaxLoot;
+        
         [Range(0,10)]
         public float MoveSpeed = 3;
         
