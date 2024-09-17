@@ -1,3 +1,5 @@
+using System;
+using CodeBase.Hero;
 using CodeBase.Logic;
 using UnityEngine;
 
@@ -9,18 +11,18 @@ namespace CodeBase.UI
 
         private IHealth _health;
 
+        public void Construct(IHealth health)
+        {
+            _health = health;
+            _health.HealthChanged += UpdateHpBar;
+        }
+
         private void Start()
         {
             IHealth health = GetComponent<IHealth>();
       
             if(health != null)
                 Construct(health);
-        }
-
-        public void Construct(IHealth health)
-        {
-            _health = health;
-            _health.HealthChanged += UpdateHpBar;
         }
 
         private void OnDestroy()

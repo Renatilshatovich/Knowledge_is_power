@@ -2,11 +2,10 @@ using System;
 using CodeBase.Data;
 using CodeBase.Enemy;
 using CodeBase.Infrastructure.Factory;
-using CodeBase.Infrastructure.Services;
-using CodeBase.Infrastructure.Services.PersistentProgress;
+using CodeBase.Services;
+using CodeBase.Services.PersistentProgress;
 using CodeBase.StaticData;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace CodeBase.Logic
 {
@@ -14,9 +13,8 @@ namespace CodeBase.Logic
     {
         public MonsterTypeId MonsterTypeId;
         private string _id;
-
-        [SerializeField] private bool _slain;
-        public bool Slain => _slain;
+        private bool _slain;
+        
         private IGameFactory _factory;
         private EnemyDeath _enemyDeath;
 
@@ -26,6 +24,13 @@ namespace CodeBase.Logic
             _factory = AllServices.Container.Single<IGameFactory>();
         }
 
+        private void OnDestroy()
+        {
+            if (_enemyDeath != null)
+                _enemyDeath.Happened -= Slay;
+        }
+
+
         public void LoadProgress(PlayerProgress progress)
         {
             if (progress.KillData.ClearedSpawners.Contains(_id))
@@ -34,25 +39,25 @@ namespace CodeBase.Logic
                 Spawn();
         }
 
+        public void UpdateProgress(PlayerProgress progress)
+        {
+            if(_slain)
+                progress.KillData.ClearedSpawners.Add(_id);
+        }
+
         private void Spawn()
         {
-            GameObject monster = _factory.CreateMonsters(MonsterTypeId, transform);
+            GameObject monster = _factory.CreateMonster(MonsterTypeId, transform);
             _enemyDeath = monster.GetComponent<EnemyDeath>();
-            _enemyDeath.Happend += Slay;
+            _enemyDeath.Happened += Slay;
         }
 
         private void Slay()
         {
             if (_enemyDeath != null)
-                _enemyDeath.Happend -= Slay;
-            
+                _enemyDeath.Happened -= Slay;
+      
             _slain = true;
-        }
-
-        public void UpdateProgress(PlayerProgress progress)
-        {
-            if (Slain)
-                progress.KillData.ClearedSpawners.Add(_id);
         }
     }
 }

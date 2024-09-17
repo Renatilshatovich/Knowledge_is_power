@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using CodeBase.Enemy;
 using CodeBase.Infrastructure.AssetManagement;
-using CodeBase.Infrastructure.Services;
-using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Logic;
+using CodeBase.Services.PersistentProgress;
+using CodeBase.Services.StaticData;
 using CodeBase.StaticData;
 using CodeBase.UI;
 using UnityEngine;
@@ -34,10 +34,10 @@ namespace CodeBase.Infrastructure.Factory
             return HeroGameObject;
         }
 
-        public GameObject CreateHud() => 
-            InstantiateRegistered(AssetPath.HudPath);
+    public GameObject CreateHud() => 
+      InstantiateRegistered(AssetPath.HudPath);
 
-        public GameObject CreateMonsters(MonsterTypeId typeId, Transform parent)
+        public GameObject CreateMonster(MonsterTypeId typeId, Transform parent)
         {
             MonsterStaticData monsterData = _staticData.ForMonster(typeId);
             GameObject monster = Object.Instantiate(monsterData.Prefab, parent.position, Quaternion.identity, parent);
@@ -47,7 +47,6 @@ namespace CodeBase.Infrastructure.Factory
             health.Max = monsterData.Hp;
             
             monster.GetComponent<ActorUI>().Construct(health);
-            monster.GetComponent<AgentMoveToHero>().Construct(HeroGameObject.transform);
             monster.GetComponent<NavMeshAgent>().speed = monsterData.MoveSpeed;
 
             Attack attack = monster.GetComponent<Attack>();
@@ -56,6 +55,7 @@ namespace CodeBase.Infrastructure.Factory
             attack.Cleavage = monsterData.Cleavage;
             attack.EffectiveDistance = monsterData.EffectiveDistance;
 
+            monster.GetComponent<AgentMoveToHero>()?.Construct(HeroGameObject.transform);
             monster.GetComponent<RotateToHero>()?.Construct(HeroGameObject.transform);
             
             return monster;
@@ -94,9 +94,7 @@ namespace CodeBase.Infrastructure.Factory
         private void RegisterProgressWatchers(GameObject gameObject)
         {
             foreach (ISavedProgressReader progressReader in gameObject.GetComponentsInChildren<ISavedProgressReader>())
-            {
                 Register(progressReader);
-            }
         }
     }
 }
