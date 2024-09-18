@@ -1,50 +1,54 @@
 using CodeBase.Data;
 using CodeBase.Infrastructure.Factory;
-using UnityEngine;
 using CodeBase.Services.Randomizer;
+using UnityEngine;
 
 namespace CodeBase.Enemy
 {
     public class LootSpawner : MonoBehaviour
     {
         public EnemyDeath EnemyDeath;
+    
         private IGameFactory _factory;
-        private IRandomService _random;
-        private int _lootMin;
-        private int _lootMax;
+        private IRandomService _randomizer;
 
-        public void Construct(IGameFactory factory, IRandomService random)
+        private int _minValue;
+        private int _maxValue;
+
+        public void Construct(IGameFactory factory, IRandomService randomService)
         {
             _factory = factory;
-            _random = random;
+            _randomizer = randomService;
         }
-
-        private void Start()
-        {
+    
+        private void Start() => 
             EnemyDeath.Happened += SpawnLoot;
+
+        public void SetLootValue(int min, int max)
+        {
+            _minValue = min;
+            _maxValue = max;
         }
 
         private void SpawnLoot()
         {
-            LootPiece loot = _factory.CreateLoot();
-            loot.transform.position = transform.position;
+            EnemyDeath.Happened -= SpawnLoot;
 
-            Loot lootItem = GenerateLoot();
-            loot.Initialize(lootItem);
+            LootPiece lootPiece = _factory.CreateLoot();
+            lootPiece.transform.position = transform.position;
+
+            Loot loot = GenerateLoot();
+      
+            lootPiece.Initialize(loot);
         }
 
         private Loot GenerateLoot()
         {
-            return new Loot()
+            Loot loot = new Loot
             {
-                Value = _random.Next(_lootMin, _lootMax)
+                Value = _randomizer.Next(_minValue, _maxValue)
             };
-        }
-
-        public void SetLoot(int min, int max)
-        {
-            _lootMin = min;
-            _lootMax = max;
+            return loot;
         }
     }
 }

@@ -17,15 +17,11 @@ namespace CodeBase.Enemy
         private bool _picked;
         private WorldData _worldData;
 
-        public void Construct(WorldData worldData)
-        {
+        public void Construct(WorldData worldData) => 
             _worldData = worldData;
-        }
 
-        public void Initialize(Loot loot)
-        {
+        public void Initialize(Loot loot) => 
             _loot = loot;
-        }
 
         private void OnTriggerEnter(Collider other) => 
             Pickup();
@@ -40,15 +36,16 @@ namespace CodeBase.Enemy
             UpdateWorldData();
 
             HideSkull();
-            PlayPickupFx();
             ShowText();
+            PlayPickupFx();
+            
             StartCoroutine(StartDestroyTimer());    
         }
 
         private void UpdateWorldData() => 
             _worldData.LootData.Collect(_loot);
 
-        private void HideSkull() => 
+        private void HideSkull() =>
             Skull.SetActive(false);
 
         private void PlayPickupFx() =>
@@ -56,7 +53,9 @@ namespace CodeBase.Enemy
 
         private void ShowText()
         {
+            Debug.Log("Loot value : " + _loot.Value);
             LootText.text = $"{_loot.Value}";
+            Debug.Log("Loot Text : " + LootText.text);
             PickupPopup.SetActive(true);
         }
 

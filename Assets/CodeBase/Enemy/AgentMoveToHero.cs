@@ -6,7 +6,7 @@ namespace CodeBase.Enemy
 {
     public class AgentMoveToHero : Follow
     {
-        private const float MinimalDistance = 1;
+        private const float MinimalDistance = 2;
         
         public NavMeshAgent Agent;
         private Transform _heroTransform;
