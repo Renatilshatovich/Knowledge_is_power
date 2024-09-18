@@ -17,22 +17,24 @@ namespace CodeBase.Infrastructure.Factory
     {
         private readonly IAssetProvider _assets;
         private readonly IStaticDataService _staticData;
-        private IRandomService _randomService;
+        private readonly IRandomService _randomService;
+        private readonly IPersistentProgressService _progressService;
 
         public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
         public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
 
-        public GameObject HeroGameObject { get; private set; }
+        private GameObject _heroGameObject;
 
-        public GameFactory(IAssetProvider assets, IStaticDataService staticData, IRandomService randomService)
+        public GameFactory(IAssetProvider assets, IStaticDataService staticData, IRandomService randomService, IPersistentProgressService progressService)
         {
             _assets = assets;
             _staticData = staticData;
             _randomService = randomService;
+            _progressService = progressService;
         }
 
         public GameObject CreateHud() => 
-      InstantiateRegistered(AssetPath.HudPath);
+            InstantiateRegistered(AssetPath.HudPath);
 
         public GameObject CreateMonster(MonsterTypeId typeId, Transform parent)
         {
@@ -51,22 +53,28 @@ namespace CodeBase.Infrastructure.Factory
             lootSpawner.Construct(this, _randomService);
 
             Attack attack = monster.GetComponent<Attack>();
-            attack.Construct(HeroGameObject.transform);
+            attack.Construct(_heroGameObject.transform);
             attack.Damage = monsterData.Damage;
             attack.Cleavage = monsterData.Cleavage;
             attack.EffectiveDistance = monsterData.EffectiveDistance;
 
-            monster.GetComponent<AgentMoveToHero>()?.Construct(HeroGameObject.transform);
-            monster.GetComponent<RotateToHero>()?.Construct(HeroGameObject.transform);
+            monster.GetComponent<AgentMoveToHero>()?.Construct(_heroGameObject.transform);
+            monster.GetComponent<RotateToHero>()?.Construct(_heroGameObject.transform);
             
             return monster;
         }
 
-        public GameObject CreateLoot() => 
-            InstantiateRegistered(AssetPath.Loot);
+        public LootPiece CreateLoot()
+        {
+            var lootPiece = InstantiateRegistered(AssetPath.Loot).GetComponent<LootPiece>();
+            
+            lootPiece.Construct(_progressService.Progress.WorldData);
+            
+            return lootPiece;
+        }
 
         public GameObject CreateHero(GameObject at) => 
-            HeroGameObject = InstantiateRegistered(AssetPath.HeroPath, at.transform.position);
+            _heroGameObject = InstantiateRegistered(AssetPath.HeroPath, at.transform.position);
 
         public void Cleanup()
         {
