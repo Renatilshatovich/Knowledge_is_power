@@ -53,9 +53,7 @@ namespace CodeBase.Enemy
 
         private void ShowText()
         {
-            Debug.Log("Loot value : " + _loot.Value);
             LootText.text = $"{_loot.Value}";
-            Debug.Log("Loot Text : " + LootText.text);
             PickupPopup.SetActive(true);
         }
 
