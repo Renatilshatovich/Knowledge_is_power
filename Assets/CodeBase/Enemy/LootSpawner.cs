@@ -1,5 +1,6 @@
 using CodeBase.Data;
 using CodeBase.Infrastructure.Factory;
+using CodeBase.Logic;
 using CodeBase.Services.Randomizer;
 using UnityEngine;
 
@@ -36,6 +37,7 @@ namespace CodeBase.Enemy
 
             LootPiece lootPiece = _factory.CreateLoot();
             lootPiece.transform.position = transform.position;
+            lootPiece.GetComponent<UniqueId>().GenerateId();
 
             Loot loot = GenerateLoot();
       

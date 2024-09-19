@@ -1,4 +1,5 @@
 using CodeBase.CameraLogic;
+using CodeBase.Enemy;
 using CodeBase.Hero;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Logic;
@@ -56,10 +57,9 @@ namespace CodeBase.Infrastructure.States
         private void InitGameWorld()
         {
             InitSpawners();
-            
+            InitLootPieces();
             GameObject hero = _gameFactory.CreateHero(GameObject.FindWithTag(InitialPointTag));
             InitHud(hero);
-
             CameraFollow(hero);
         }
 
@@ -69,6 +69,15 @@ namespace CodeBase.Infrastructure.States
             {
                 var spawner = spawnerObject.GetComponent<EnemySpawner>();
                 _gameFactory.Register(spawner);
+            }
+        }
+        
+        private void InitLootPieces()
+        {
+            foreach (string key in _progressService.Progress.WorldData.LootData.LootPiecesOnScene.Dictionary.Keys)
+            {
+                LootPiece lootPiece = _gameFactory.CreateLoot();
+                lootPiece.GetComponent<UniqueId>().Id = key;
             }
         }
 
