@@ -12,7 +12,7 @@ namespace CodeBase.Logic
     public class EnemySpawner : MonoBehaviour, ISavedProgress
     {
         public MonsterTypeId MonsterTypeId;
-        private string _id;
+        public string Id { get; set; }
         private bool _slain;
         
         private IGameFactory _factory;
@@ -20,7 +20,7 @@ namespace CodeBase.Logic
 
         private void Awake()
         {
-            _id = GetComponent<UniqueId>().Id;
+            Id = GetComponent<UniqueId>().Id;
             _factory = AllServices.Container.Single<IGameFactory>();
         }
 
@@ -33,7 +33,7 @@ namespace CodeBase.Logic
 
         public void LoadProgress(PlayerProgress progress)
         {
-            if (progress.KillData.ClearedSpawners.Contains(_id))
+            if (progress.KillData.ClearedSpawners.Contains(Id))
                 _slain = true;
             else
                 Spawn();
@@ -42,7 +42,7 @@ namespace CodeBase.Logic
         public void UpdateProgress(PlayerProgress progress)
         {
             if(_slain)
-                progress.KillData.ClearedSpawners.Add(_id);
+                progress.KillData.ClearedSpawners.Add(Id);
         }
 
         private void Spawn()

@@ -55,6 +55,14 @@ namespace CodeBase.Infrastructure.Factory
       return lootPiece;
     }
 
+    public void CreateSpawners(Vector3 at, string spawnerId, MonsterTypeId monsterTypeId)
+    {
+      EnemySpawner spawner = InstantiateRegistered(AssetPath.Spawner, at).GetComponent<EnemySpawner>();
+
+      spawner.Id = spawnerId;
+      spawner.MonsterTypeId = monsterTypeId;
+    }
+
     public GameObject CreateMonster(MonsterTypeId typeId, Transform parent)
     {
       MonsterStaticData monsterData = _staticData.ForMonster(typeId);
