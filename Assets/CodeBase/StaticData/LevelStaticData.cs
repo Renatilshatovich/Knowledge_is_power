@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using CodeBase.Logic;
 using UnityEngine;
 
-namespace CodeBase.Services.StaticData
+namespace CodeBase.StaticData
 {
-    [CreateAssetMenu(fileName = "LevelData", menuName = "StaticData/Level")]
+    [CreateAssetMenu(fileName = "LevelData", menuName = "Static Data/Level")]
     public class LevelStaticData : ScriptableObject
     {
         public string LevelKey;

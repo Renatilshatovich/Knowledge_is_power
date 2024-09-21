@@ -56,7 +56,7 @@ namespace CodeBase.Infrastructure.Factory
       return lootPiece;
     }
 
-    public void CreateSpawners(Vector3 at, string spawnerId, MonsterTypeId monsterTypeId)
+    public void CreateSpawner(Vector3 at, string spawnerId, MonsterTypeId monsterTypeId)
     {
       SpawnPoint spawner = InstantiateRegistered(AssetPath.Spawner, at).GetComponent<SpawnPoint>();
 

@@ -1,99 +1,101 @@
+using System.Collections.Generic;
 using CodeBase.CameraLogic;
+using CodeBase.Data;
 using CodeBase.Enemy;
 using CodeBase.Hero;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Logic;
 using CodeBase.Services.PersistentProgress;
 using CodeBase.Services.StaticData;
+using CodeBase.StaticData;
 using CodeBase.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace CodeBase.Infrastructure.States
 {
-    public class LoadLevelState : IPayloadedState<string>
+  public class LoadLevelState : IPayloadedState<string>
+  {
+    private const string InitialPointTag = "InitialPoint";
+
+    private readonly GameStateMachine _stateMachine;
+    private readonly SceneLoader _sceneLoader;
+    private readonly LoadingCurtain _loadingCurtain;
+    private readonly IGameFactory _gameFactory;
+    private readonly IPersistentProgressService _progressService;
+    private readonly IStaticDataService _staticData;
+
+    public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain, IGameFactory gameFactory, IPersistentProgressService progressService, IStaticDataService staticDataService)
     {
-        private const string InitialPointTag = "InitialPoint";
-        private const string EnemySpawnerTag = "EnemySpawner";
-
-        private readonly GameStateMachine _stateMachine;
-        private readonly SceneLoader _sceneLoader;
-        private readonly LoadingCurtain _loadingCurtain;
-        private readonly IGameFactory _gameFactory;
-        private readonly IPersistentProgressService _progressService;
-        private readonly IStaticDataService _staticData;
-
-
-        public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain, IGameFactory gameFactory, IPersistentProgressService progressService)
-        {
-            _stateMachine = gameStateMachine;
-            _sceneLoader = sceneLoader;
-            _loadingCurtain = loadingCurtain;
-            _gameFactory = gameFactory;
-            _progressService = progressService;
-        }
-
-        public void Enter(string sceneName)
-        {
-            _loadingCurtain.Show();
-            _gameFactory.Cleanup();
-            _sceneLoader.Load(sceneName, OnLoaded);
-        }
-
-        public void Exit() =>
-            _loadingCurtain.Hide();
-
-        private void OnLoaded()
-        {
-            InitGameWorld();
-            InformProgressReaders();
-
-            _loadingCurtain.Hide();
-            _stateMachine.Enter<GameLoopState>();
-        }
-
-        private void InformProgressReaders()
-        {
-            foreach (ISavedProgressReader progressReader in _gameFactory.ProgressReaders)
-                progressReader.LoadProgress(_progressService.Progress);
-        }
-
-        private void InitGameWorld()
-        {
-            InitSpawners();
-            InitLootPieces();
-            GameObject hero = _gameFactory.CreateHero(GameObject.FindWithTag(InitialPointTag));
-            InitHud(hero);
-            CameraFollow(hero);
-        }
-
-        private void InitSpawners()
-        {
-            string sceneKey = SceneManager.GetActiveScene().name;
-            LevelStaticData levelData = _staticData.ForLevel(sceneKey);
-            foreach (EnemySpawnerData spawnerData in levelData.EnemySpawners)
-            {
-                _gameFactory.CreateSpawners(spawnerData.Position, spawnerData.Id, spawnerData.MonsterTypeId);
-            }
-        }
-        
-        private void InitLootPieces()
-        {
-            foreach (string key in _progressService.Progress.WorldData.LootData.LootPiecesOnScene.Dictionary.Keys)
-            {
-                LootPiece lootPiece = _gameFactory.CreateLoot();
-                lootPiece.GetComponent<UniqueId>().Id = key;
-            }
-        }
-
-        private void InitHud(GameObject hero)
-        {
-            GameObject hud = _gameFactory.CreateHud();
-      
-            hud.GetComponentInChildren<ActorUI>().Construct(hero.GetComponent<HeroHealth>());
-        }
-        
-        private void CameraFollow(GameObject hero) =>
-            Camera.main.GetComponent<CameraFollow>().Follow(hero);
+      _stateMachine = gameStateMachine;
+      _sceneLoader = sceneLoader;
+      _loadingCurtain = loadingCurtain;
+      _gameFactory = gameFactory;
+      _progressService = progressService;
+      _staticData = staticDataService;
     }
+
+    public void Enter(string sceneName)
+    {
+      _loadingCurtain.Show();
+      _gameFactory.Cleanup();
+      _sceneLoader.Load(sceneName, OnLoaded);
+    }
+
+    public void Exit() =>
+      _loadingCurtain.Hide();
+
+    private void OnLoaded()
+    {
+      InitGameWorld();
+      InformProgressReaders();
+
+      _stateMachine.Enter<GameLoopState>();
+    }
+
+    private void InformProgressReaders()
+    {
+      foreach (ISavedProgressReader progressReader in _gameFactory.ProgressReaders)
+        progressReader.LoadProgress(_progressService.Progress);
+    }
+
+    private void InitGameWorld()
+    {
+      InitSpawners();
+      InitLootPieces();
+      GameObject hero = _gameFactory.CreateHero(GameObject.FindWithTag(InitialPointTag));
+      InitHud(hero);
+      CameraFollow(hero);
+    }
+
+    private void InitSpawners()
+    {
+      string sceneKey = SceneManager.GetActiveScene().name;
+      LevelStaticData levelData = _staticData.ForLevel(sceneKey);
+      
+      foreach (EnemySpawnerData spawnerData in levelData.EnemySpawners)
+        _gameFactory.CreateSpawner(spawnerData.Position, spawnerData.Id, spawnerData.MonsterTypeId);
+    }
+
+    private void InitLootPieces()
+    {
+      foreach (KeyValuePair<string, LootPieceData> item in _progressService.Progress.WorldData.LootData.LootPiecesOnScene.Dictionary)
+      {
+        LootPiece lootPiece = _gameFactory.CreateLoot();
+        lootPiece.GetComponent<UniqueId>().Id = item.Key;
+        lootPiece.Initialize(item.Value.Loot);
+        lootPiece.transform.position = item.Value.Position.AsUnityVector();
+      }
+    }
+
+    private void InitHud(GameObject hero)
+    {
+      GameObject hud = _gameFactory.CreateHud();
+      
+      hud.GetComponentInChildren<ActorUI>().Construct(hero.GetComponent<HeroHealth>());
+    }
+
+    private void CameraFollow(GameObject hero) =>
+      Camera.main.GetComponent<CameraFollow>().Follow(hero);
+  }
 }

@@ -7,7 +7,9 @@ namespace CodeBase.Services.StaticData
 {
     public class StaticDataService : IStaticDataService
     {
-        private const string MonstersDataPath = "StaticData/Monsters";
+        private const string MonstersDataPath = "Static Data/Monsters";
+        private const string LevelsDataPath = "Static Data/Levels";
+        
         private Dictionary<MonsterTypeId, MonsterStaticData> _monsters;
         private Dictionary<string, LevelStaticData> _levels;
 
@@ -18,7 +20,7 @@ namespace CodeBase.Services.StaticData
                 .ToDictionary(x => x.MonsterTypeId, x => x);
             
             _levels = Resources
-                .LoadAll<LevelStaticData>(MonstersDataPath)
+                .LoadAll<LevelStaticData>(LevelsDataPath)
                 .ToDictionary(x => x.LevelKey, x => x);
         }
 
