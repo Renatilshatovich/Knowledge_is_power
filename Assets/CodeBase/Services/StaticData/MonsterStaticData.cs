@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CodeBase.Services.StaticData
 {
-    [CreateAssetMenu(fileName = "MonsterData", menuName = "StaticData/Monster")]
+    [CreateAssetMenu(fileName = "MonsterData", menuName = "Static Data/Monster")]
     public class MonsterStaticData : ScriptableObject
     {
         public MonsterTypeId MonsterTypeId;
