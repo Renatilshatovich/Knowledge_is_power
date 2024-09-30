@@ -1,7 +1,6 @@
-using CodeBase.StaticData;
 using UnityEngine;
 
-namespace CodeBase.Services.StaticData
+namespace CodeBase.StaticData
 {
     [CreateAssetMenu(fileName = "MonsterData", menuName = "Static Data/Monster")]
     public class MonsterStaticData : ScriptableObject
