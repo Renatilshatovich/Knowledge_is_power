@@ -47,7 +47,8 @@ namespace CodeBase.Infrastructure.States
             
             _services.RegisterSingle<IUIFactory>(new UIFactory(
                 _services.Single<IAssetProvider>(), 
-                _services.Single<IStaticDataService>()));
+                _services.Single<IStaticDataService>(), 
+                _services.Single<IPersistentProgressService>()));
             _services.RegisterSingle<IWindowService>(new WindowService(_services.Single<IUIFactory>()));
             
             _services.RegisterSingle<IGameFactory>(new GameFactory(
